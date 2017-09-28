@@ -1,9 +1,12 @@
+from sklearn.feature_extraction import DictVectorizer
+
 from transformation.remove_incomplete import remove_by_value
 from transformation.secondary_features import all_features, secondary_features
-from utils.utils import replace_rare_values
+from utils.utils import replace_rare_values, set_element_first, map_headers_to_data
 
 
 def transform_fields(items, log=False):
+    items = remove_ids(items)
     items = remove_free_text(items)  # not analyzed now
     items = split_engine_into_type_and_volume(items)
     items = remove_by_engine_volume_zero(items, log=log)
@@ -20,6 +23,7 @@ def transform_fields(items, log=False):
     items = merge_transmissions(items)
     items = merge_rare_cities(items, log=log)
     items = binarize_secondary_features(items)
+    items = split_features(items, key_feature="price", log=log)
     return items
 
 
@@ -93,9 +97,17 @@ def extract_year_month_from_checkup(checkup):
     return {"year": int(year), "month": int(month)}
 
 
+def remove_ids(items):
+    return remove_field(items, "_id")
+
+
 def remove_free_text(items):
+    return remove_field(items, "free_text")
+
+
+def remove_field(items, field):
     for x in items:
-        x.pop("free_text")
+        x.pop(field)
     return items
 
 
@@ -179,3 +191,22 @@ def binarize_secondary_features(items):
             x[feature] = True
         x.pop("secondary_features")
     return items
+
+
+def split_features(items, key_feature='price', log=False):
+    dict_vectorizer = DictVectorizer()
+
+    transformed_data = list(dict_vectorizer.fit_transform(items).toarray())
+    feature_names = dict_vectorizer.get_feature_names()
+
+    if log:
+        print("Features before:", len(items[0]))
+        print("Features after:", len(feature_names))
+        print(feature_names)
+
+    index_of_key = feature_names.index(key_feature)
+
+    feature_names = set_element_first(feature_names, index_of_key)
+    transformed_data = [set_element_first(item, index_of_key) for item in transformed_data]
+
+    return map_headers_to_data(feature_names, transformed_data)

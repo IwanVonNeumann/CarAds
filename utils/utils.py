@@ -45,3 +45,15 @@ def replace_value(item, field, dictionary, default_value='OTHER'):
     if item[field] not in dictionary:
         item[field] = default_value
     return item
+
+
+def set_element_first(array, i):
+    as_list = list(array)
+    element = as_list.pop(i)
+    head = [element]
+    head.extend(as_list)
+    return head
+
+
+def map_headers_to_data(headers, items):
+    return [dict(zip(headers, x)) for x in items]
