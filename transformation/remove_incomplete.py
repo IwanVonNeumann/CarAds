@@ -1,6 +1,7 @@
 def remove_incomplete(items, log=False):
     items = remove_by_empty_secondary_features(items, log=log)
     items = remove_by_primary_attribute_none(items, log=log)
+    items = remove_by_value(items, "body_type", "-", log=log)
     return items
 
 
