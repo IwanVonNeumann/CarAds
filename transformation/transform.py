@@ -31,7 +31,7 @@ def split_engine_into_type_and_volume(items):
     for x in items:
         engine = x["engine"]
         parts = engine.split(" ")
-        engine_volume = parts[0]
+        engine_volume = float(parts[0])
         engine_type = parts[1]
         x["engine_volume"] = engine_volume
         x["engine_type"] = engine_type
@@ -41,7 +41,7 @@ def split_engine_into_type_and_volume(items):
 
 # Removing by engine_volume=0.0: 2
 def remove_by_engine_volume_zero(items, log=False):
-    return remove_by_value(items, "engine_volume", "0.0", log=log)
+    return remove_by_value(items, "engine_volume", 0, log=log)
 
 
 def extract_metallic_paint_type(items):

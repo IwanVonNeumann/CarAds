@@ -10,7 +10,5 @@ nice_data = pre_process(all_ads, log=True)
 
 print("after:", len(nice_data))
 
-unique_transmission = feature_unique_values(nice_data, "transmission")
-
-print(unique_transmission)
-print(len(unique_transmission))
+for i in range(0,10):
+    print(nice_data[i])
