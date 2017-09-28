@@ -56,9 +56,9 @@ def extract_metallic_paint_type(items):
         if color.endswith("металлик"):
             color = color.split(" ")[0]
             x["color"] = color
-            x["paint_metallic"] = True
+            x["paint_metallic"] = 1
         else:
-            x["paint_metallic"] = False
+            x["paint_metallic"] = 0
     return items
 
 
@@ -70,17 +70,17 @@ def binarize_checkup(items):
 
 def binarize_checkup_one(checkup):
     if checkup in [None, "Без техосмотра", "0.0"]:
-        return False
+        return 0
 
     checkup = extract_year_month_from_checkup(checkup)
 
     if checkup["year"] < 2017:
-        return False
+        return 0
     if checkup["year"] > 2017:
-        return True
+        return 1
     if checkup["month"] > 8:
-        return True
-    return False
+        return 1
+    return 0
 
 
 def extract_year_month_from_checkup(checkup):
@@ -185,10 +185,10 @@ def binarize_secondary_features(items):
     features = all_features()
     for x in items:
         for feature in features:
-            x[feature] = False
+            x[feature] = 0
         for raw_feature_name in x["secondary_features"]:
             feature = secondary_features[raw_feature_name]
-            x[feature] = True
+            x[feature] = 1
         x.pop("secondary_features")
     return items
 
