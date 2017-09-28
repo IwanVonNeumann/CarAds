@@ -57,3 +57,11 @@ def set_element_first(array, i):
 
 def map_headers_to_data(headers, items):
     return [dict(zip(headers, x)) for x in items]
+
+
+def extract_keys(items):
+    return list(items[0].keys())
+
+
+def extract_values(items):
+    return [list(x.values()) for x in items]
