@@ -98,3 +98,7 @@ secondary_features = {
     "Hands-free": "hands_free",
     "Subwoofer": "subwoofer"
 }
+
+
+def all_features():
+    return sorted(list(secondary_features.values()))

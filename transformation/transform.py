@@ -1,4 +1,5 @@
 from transformation.remove_incomplete import remove_by_value
+from transformation.secondary_features import all_features, secondary_features
 from utils.utils import replace_rare_values
 
 
@@ -18,6 +19,7 @@ def transform_fields(items, log=False):
     items = merge_city_lithuania(items)
     items = merge_transmissions(items)
     items = merge_rare_cities(items, log=log)
+    items = binarize_secondary_features(items)
     return items
 
 
@@ -165,3 +167,15 @@ def merge_transmission(transmission):
 
 def merge_rare_cities(items, log=False):
     return replace_rare_values(items, "city", 0.05, log=log)
+
+
+def binarize_secondary_features(items):
+    features = all_features()
+    for x in items:
+        for feature in features:
+            x[feature] = False
+        for raw_feature_name in x["secondary_features"]:
+            feature = secondary_features[raw_feature_name]
+            x[feature] = True
+        x.pop("secondary_features")
+    return items
