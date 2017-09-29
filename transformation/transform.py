@@ -2,7 +2,7 @@ from sklearn.feature_extraction import DictVectorizer
 
 from transformation.remove_incomplete import remove_by_value
 from transformation.secondary_features import all_features, secondary_features
-from utils.utils import replace_rare_values, set_element_first, map_headers_to_data
+from utils.utils import replace_rare_values, set_element_first, extract_feature, calculate_absolute_frequencies
 
 
 def transform_fields(items, log=False):
@@ -23,7 +23,7 @@ def transform_fields(items, log=False):
     items = merge_transmissions(items)
     items = merge_rare_cities(items, log=log)
     items = binarize_secondary_features(items)
-    items = split_features(items, key_feature="price", log=log)
+    # items = split_features(items, key_feature="price", log=log)
     return items
 
 
@@ -193,6 +193,22 @@ def binarize_secondary_features(items):
     return items
 
 
+def get_rare_models(items, threshold):
+    models = extract_feature(items, "model")
+    models_abs_f = calculate_absolute_frequencies(models)
+    rare_models = set()
+
+    for key in models_abs_f.keys():
+        if models_abs_f[key] <= threshold:
+            rare_models.add(key)
+    return rare_models
+
+
+def remove_rare_models(items, threshold):
+    rare_models = get_rare_models(items, threshold)
+    return [x for x in items if x["model"] not in rare_models]
+
+
 def split_features(items, key_feature='price', log=False):
     dict_vectorizer = DictVectorizer()
 
@@ -209,4 +225,7 @@ def split_features(items, key_feature='price', log=False):
     feature_names = set_element_first(feature_names, index_of_key)
     transformed_data = [set_element_first(item, index_of_key) for item in transformed_data]
 
-    return map_headers_to_data(feature_names, transformed_data)
+    return {
+        "feature_names": feature_names,
+        "data": transformed_data
+    }
