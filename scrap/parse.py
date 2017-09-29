@@ -98,9 +98,23 @@ def parse_ad(html_text):
     free_text = soup.find("div", {"id": "msg_div_msg"})
     ad.free_text = free_text.text
 
-    secondary_params = soup.find_all("b", {"class": "auto_c"})
-
-    for x in secondary_params:
-        ad.secondary_features.append(x.text)
+    ad.secondary_features = parse_secondary_features(html_text)
 
     return ad
+
+
+def parse_secondary_features(html_text):
+    soup = BeautifulSoup(html_text, "html.parser")
+    sections = soup.find_all("div", {"class": "auto_c_head"})
+    secondary_features = []
+
+    for section in sections:
+        next_el = section.nextSibling
+        while True:
+            if next_el is None or next_el.name == "div":
+                break
+            if next_el.name == "b":
+                secondary_features.append("{}_{}".format(section.text, next_el.text))
+            next_el = next_el.nextSibling
+
+    return secondary_features
