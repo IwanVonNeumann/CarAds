@@ -19,7 +19,7 @@ secondary_features = {
     "Комплектация_Обнаружение пешеходов": "pedestrians_detection",
     "Комплектация_Автоматическая парковка": "automatic_parking",
     "Комплектация_Ассистент \"мёртвых\" зон": "blind_zones_assistant",
-    "Комплектация_Ассистент движ. по полосе": "strip_moving_assistant",
+    "Комплектация_Ассистент движ. по полосе": "lane_assistant",
     "Комплектация_Распознавание знаков": "sign_recognition",
     "Комплектация_Система экстр. торможения": "extreme_braking_system",
     "Комплектация_Keyless Go": "keyless_go",
