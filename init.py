@@ -1,4 +1,5 @@
 from db.init_db import init_db
+from transformation.format_raw import format_raw_records
 
 # sections = get_sections_list()
 
@@ -7,4 +8,6 @@ from db.init_db import init_db
 
 # store_ads(r"pages\ads")
 
+
 init_db()
+format_raw_records()
