@@ -9,15 +9,14 @@ def read_file(filename):
     return text
 
 
-def get_sections_list():
-    IGNORED_SECTIONS = {"Другие марки"}
-
-    results = []
-
-    html_text = read_file("pages/list.html")
-    soup = BeautifulSoup(html_text, "html.parser")
+def parse_sections_list(html_file):
+    soup = BeautifulSoup(html_file, "html.parser")
 
     model_links = soup.find("td", {"width": "75%", "valign": "top"}).find_all('a', {'class': 'a_category'})
+
+    results = []
+    IGNORED_SECTIONS = {"Другие марки"}
+
     for link in model_links:
         if link.text not in IGNORED_SECTIONS:
             results.append({
@@ -28,8 +27,8 @@ def get_sections_list():
     return results
 
 
-def get_next_page_href(html_text):
-    soup = BeautifulSoup(html_text, "html.parser")
+def find_next_page_href(html_file):
+    soup = BeautifulSoup(html_file, "html.parser")
     nav_links = soup.find_all("a", {"name": "nav_id"})
 
     if len(nav_links) == 0:
